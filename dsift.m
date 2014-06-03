@@ -1,9 +1,9 @@
-function [ FRAMES, DESCRS ] = dsift( I, S, step )
+function [ FRAMES, DESCRS ] = dsift( I, S, step, sizes )
 %DSIFT Summary of this function goes here
 %   Detailed explanation goes here
 %   I must be a grayscale image
 I0 = single(I);
-[FRAMES,DESCRS] = vl_phow(I0,'Color','gray','Step',step);
+[FRAMES,DESCRS] = vl_phow(I0,'Color','gray','Step',step,'Sizes',sizes);
 FRAMES = FRAMES';
 DESCRS = DESCRS';
 newX = size(S,2);
