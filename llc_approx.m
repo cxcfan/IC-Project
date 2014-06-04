@@ -7,6 +7,7 @@ if knn <= 0
     knn = 5;
 end
 
+Des = single(Des);
 nDES = size(Des,1);
 nCB = size(CB,1);
 
@@ -16,9 +17,9 @@ R = eye(knn,knn);
 CMat = zeros(nDES, nCB);
 for i = 1:nDES
     idx = IDX(i,:);
-    B = CB(i,idx) - repmat(Des(i,:),knn,1);
+    B = CB(idx,:) - repmat(Des(i,:),knn,1);
     C = B * B';
-    C = C + R * lambda * diag(C);
+    C = C + R * trace(C) * lambda;
     tC = C \ ones(knn,1);
     tC = tC / sum(tC);
     CMat(i,idx) = tC';
