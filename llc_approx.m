@@ -3,9 +3,6 @@ function [ CMat, CMat2 ] = llc_approx( CB, Des, knnL, knnS, lambda )
 %   Detailed explanation goes here
 %   CB:     M x d codebook, M entries in a d-dim space
 %   Des:    N x d codebook, N descriptors in a d-dim space
-if knnL <= 0
-    knnL = 5;
-end
 
 Des = single(Des);
 nDES = size(Des,1);

@@ -1,4 +1,4 @@
-function [f, d, cpI] = prepareImg (tsPath, tsName)
+function [f, d, cpI] = prepareImgFromList (tsPath, tsName)
 %   tsPath is the path of train set
 %   for example: "D:\COURSE\ML\PRJ\MLKD-Final-Project-Release\ic-data\train"
     %pair = parsePair(tsPath, tsName);
@@ -14,16 +14,16 @@ function [f, d, cpI] = prepareImg (tsPath, tsName)
     tic;
     parfor i = 1:size(list, 1)%size(pair,2)
         filePath = [tsPath, '\', num2str(list(i, 1)), '.jpg'];%num2str(pair(1,i))
-        fprintf('%d\n', i);
-        [f{i}, d{i}, cpI{i}] = getAllSIFT(imread(filePath), 6, 5, 6, 5, 50, 10);
+        fprintf('working: %d\n', i);
+        [f{i}, d{i}, cpI{i}] = getAllSIFT(imread(filePath), 7, 9, 6, 7, 50, 10);
     end
-    toc;
-
+    
     parfor i = 1:size(f, 1);
         [f{i}, d{i}] = truncation(f{i}, d{i});
         d{i} = single(d{i}) / 255;
     end
-
+    toc;
+    
     %save('fTrunc.mat', 'f', '-v7.3');
     %save('dTrunc.mat', 'd', '-v7.3');
     %save('cpI.mat', 'cpI', '-v7.3');

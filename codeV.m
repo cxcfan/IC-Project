@@ -4,11 +4,11 @@ function [ ftVec ] = codeV (cb, d, f, hm, knnLLC1, knnLLC2, lambda, knnW2P)
     %   knnLLC1: default 5 -- for central
     %   knnLLC2: default 20 -- for side
     %   lambda: default 1e-4
-    %   knnW2P: default 20 (minimal number of descr: 25)
+    %   knnW2P: default 20
     sizeD = size(d,1);
     sizeR = size(cb,1);
     ftVec = zeros(sizeD, sizeR);
-    tic;
+    %tic;
     %parfor
     parfor i = 1:sizeD
         %   coding one image
@@ -19,17 +19,20 @@ function [ ftVec ] = codeV (cb, d, f, hm, knnLLC1, knnLLC2, lambda, knnW2P)
         [codeII,codeI] = llc_approx(cb,d{i},knnLLC2,knnLLC1,lambda);
         %   visual words -> visual phrase
         f0 = f{i}(:,1:2);
-        IDX = knnsearch(f0,f0,'K',knnW2P+1);
-        IDX = IDX(:,2:knnW2P+1);
+        knnW = min(knnW2P,size(f0,1) - 1);
+        [IDX,D] = knnsearch(f0,f0,'K',knnW+1);
+        IDX = IDX(:,2:knnW+1);
+        D = D(:,2:knnW+1);
         %   GPP Pooling
         codeR = zeros(1,sizeR);
         sizeI = size(f0,1);
         hm0 = hm{i};
         for j = 1:sizeI
             gaussCoeff = round(f0(j,:));
-            codeR = max(codeR,max((codeII(IDX(j,:),:) * hm0(gaussCoeff(2),gaussCoeff(1))),[],1) + codeI(j,:));
+            diagSm = getSmooth(D(j,:),0.01);
+            codeR = max(codeR,(max((diagSm * codeII(IDX(j,:),:)),[],1) + codeI(j,:)) * hm0(gaussCoeff(2),gaussCoeff(1)));
         end
         ftVec(i,:) = codeR;
     end
-    toc;
+    %toc;
 end
