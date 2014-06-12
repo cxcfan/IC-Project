@@ -12,7 +12,7 @@ ftVec = splitCode(d,f,cpI,codebook,split);
 
 %   construct a set of fake labeled data
 tlv = zeros(size(ftVec,1),2);
-tlv(:,1) = list;
+tlv(:,1) = list(start:final,1);
 img_predict(tlv,ftVec,model);
 fprintf('Test complete! Result is written in result.list.\n');
 toc;
